@@ -1,1 +1,2 @@
+cd /home/site/wwwroot
 python3 authades.py
