@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/site/wwwroot
+cd /home/site/repository
 echo "🔧 Iniciando health‑check HTTP na porta 8000"
 nohup python3 -m http.server 8000 >/dev/null 2>&1 &
 echo "🔧 Iniciando Discord‑Bot"
