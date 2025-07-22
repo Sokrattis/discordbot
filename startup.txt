@@ -1,1 +1,1 @@
-python authades.py
+python3 authades.py
