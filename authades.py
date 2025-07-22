@@ -3,6 +3,8 @@ import random
 import discord
 from discord.ext import commands
 
+print("🔧 Iniciando bot no Azure...")
+
 intents = discord.Intents.default()
 intents.message_content = True  # permite ler o conteúdo das mensagens
 
