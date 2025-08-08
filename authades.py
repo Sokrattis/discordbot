@@ -37,6 +37,11 @@ async def teste(ctx, nro: str = None, dificuldade: str = None):
     # ajusta diff para não passar do total de hits
     if diff is not None:
         diff = min(diff, total_hits)
+        hits_count = diff
+        trunfos_count = total_hits - diff
+    else:
+        hits_count = total_hits
+        trunfos_count = 0
 
     # monta a sequência única de ícones
     seq = ['🔹' if diff is None or i < diff else '🔸' for i in range(total_hits)]
@@ -47,7 +52,9 @@ async def teste(ctx, nro: str = None, dificuldade: str = None):
         icons = ''.join(seq[idx:idx + h])
         idx += h
         parts.append(f"{d} {icons}".strip())
-    await ctx.send(", ".join(parts))
+
+    resultado = ", ".join(parts)
+    await ctx.send(f"{resultado} **[{hits_count}+{trunfos_count}]**")
 
 token = os.getenv("DISCORD_TOKEN")
 bot.run(token)
