@@ -3,38 +3,40 @@ import random
 import discord
 from discord.ext import commands
 
-print("🔧 Iniciando bot no Azure...")
+print("Iniciando bot no Azure...")
 
 intents = discord.Intents.default()
-intents.message_content = True  # permite ler o conteúdo das mensagens
+intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.command()
-async def teste(ctx, arg=None):
-    # validação: só aceita inteiros de 1 a 9
+async def teste(ctx, nro: str = None, dificuldade: str = None):
     try:
-        n = int(arg) if arg is not None else 1
-    except (TypeError, ValueError):
-        await ctx.send("Por favor use `!teste N` onde N é um número inteiro de 1 a 9.")
-        return
+        n = int(nro) if nro else 1
+    except ValueError:
+        return await ctx.send("Use `!teste N [D]` onde N e D são inteiros.")
     if not 1 <= n <= 9:
-        await ctx.send("Por favor use `!teste N` onde N é um número inteiro de 1 a 9.")
-        return
+        return await ctx.send("N deve ser um inteiro de 1 a 9.")
+    diff = None
+    if dificuldade:
+        try:
+            diff = int(dificuldade)
+        except ValueError:
+            return await ctx.send("Use `!teste N [D]` onde N e D são inteiros.")
 
-    # rola os dados
     rolls = [random.randint(1, 10) for _ in range(n)]
-    # formata cada resultado com 🔆 para acertos
     parts = []
     for d in rolls:
         hits = max(d - 7, 0)
-        parts.append(f"{d} {'🔆' * hits}".strip())
-    joined = ", ".join(parts)
+        icons = ['🔅'] * hits
+        if diff is not None and hits > diff:
+            # troca os ícones que ultrapassam a dificuldade
+            for i in range(diff, hits):
+                icons[i] = '🔆'
+        parts.append(f"{d} {''.join(icons)}".strip())
 
-    # monta e envia a mensagem
-    timestamp = ctx.message.created_at.strftime("%H:%M:%S")
-    user = ctx.author.name
-    await ctx.send(f"{joined}")
+    await ctx.send(", ".join(parts))
 
 token = os.getenv("DISCORD_TOKEN")
 bot.run(token)
